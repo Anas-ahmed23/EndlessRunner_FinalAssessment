@@ -119,6 +119,58 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &237908647 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
+  m_PrefabInstance: {fileID: 273192732}
+  m_PrefabAsset: {fileID: 0}
+--- !u!143 &237908650
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237908647}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.35
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!4 &237908652 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
+  m_PrefabInstance: {fileID: 273192732}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &237908653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237908647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9259f9ee7807cb44ea190bf6a8a64f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  forwardSpeed: 10
+  laneDistance: 3
+  laneChangeSpeed: 10
+  jumpForce: 7
+  gravity: 20
 --- !u!1001 &273192732
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -129,11 +181,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.6105092
+      value: -1.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2199974
+      value: 0.207
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -182,7 +234,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 237908650}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 237908653}
   m_SourcePrefab: {fileID: 100100000, guid: 0dc9052764b847f438a8df028aa6688f, type: 3}
 --- !u!1 &290406093
 GameObject:
@@ -308,6 +366,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -433,6 +492,21 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90d7ac9ce6bf5e4bbc43e8633ea474f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowCamera
+  target: {fileID: 237908652}
+  offset: {x: 0, y: 3, z: -7}
+  followSpeed: 5
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
