@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -9,24 +9,22 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-
-        DontDestroyOnLoad(gameObject);
+        Instance = this;
     }
 
     public void GameOver()
     {
         if (isGameOver) return;
+
         isGameOver = true;
         Debug.Log("GAME OVER called");
-        // Freeze physics/time? We handle freeze in player.StopImmediate
-        // Show UI handled by UI canvas script
     }
 
-    public void Restart()
+    // THIS is the method your button will call
+    public void RestartGame()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isGameOver = false;
+        SceneManager.LoadScene("SampleScene");
     }
 }

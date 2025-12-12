@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement))]
 public class PlayerCollisionDetect : MonoBehaviour
@@ -17,20 +17,21 @@ public class PlayerCollisionDetect : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         anim = GetComponent<Animator>();
-        if (obstacleLayer.value == 0) obstacleLayer = ~0; // if not set, check all layers
+        if (obstacleLayer.value == 0) obstacleLayer = ~0; // fallback layer mask
     }
 
     void Update()
     {
         if (hitAlready) return;
 
+        // Detection sphere in front of the character
         Vector3 localOffset = new Vector3(0f, heightOffset, forwardOffset);
         Vector3 worldPos = transform.TransformPoint(localOffset);
 
         Collider[] hits = Physics.OverlapSphere(worldPos, checkRadius, obstacleLayer, QueryTriggerInteraction.Ignore);
+
         if (hits != null && hits.Length > 0)
         {
-            // fallback tag check
             foreach (var c in hits)
             {
                 if (c.CompareTag(obstacleTag))
@@ -49,15 +50,19 @@ public class PlayerCollisionDetect : MonoBehaviour
 
         Debug.Log("Player hit obstacle! -> " + obstacle.name);
 
+        // Stop player movement
         if (movement != null)
-        {
             movement.StopImmediate();
-        }
 
+        // Stop score here ⭐
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.StopScore();
+
+        // Play animation if parameter exists
         if (anim != null && HasParam(anim, "Die"))
             anim.SetTrigger("Die");
 
-        // notify central manager (UI will read this)
+        // Notify GameManager
         if (GameManager.Instance != null)
             GameManager.Instance.GameOver();
     }
@@ -65,7 +70,8 @@ public class PlayerCollisionDetect : MonoBehaviour
     bool HasParam(Animator animator, string name)
     {
         foreach (var p in animator.parameters)
-            if (p.name == name) return true;
+            if (p.name == name)
+                return true;
         return false;
     }
 }

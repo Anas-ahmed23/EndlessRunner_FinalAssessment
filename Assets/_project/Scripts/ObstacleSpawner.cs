@@ -6,12 +6,14 @@ public class ObstacleSpawner : MonoBehaviour
     public float spawnDistance = 50f;
     public float spawnInterval = 15f;
     public float laneDistance = 3f;
+    public Transform player;
+
 
     private float nextSpawnZ = 20f;
 
     void Update()
     {
-        while (nextSpawnZ < Camera.main.transform.position.z + spawnDistance)
+        while (nextSpawnZ < player.position.z + spawnDistance)
         {
             SpawnObstacle(nextSpawnZ);
             nextSpawnZ += spawnInterval;
