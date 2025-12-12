@@ -5,11 +5,19 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [HideInInspector] public bool isGameOver = false;
+    public bool isGameOver { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        Time.timeScale = 1f;
+        isGameOver = false;
     }
 
     public void GameOver()
@@ -17,14 +25,20 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
-        Debug.Log("GAME OVER called");
+        Debug.Log("GAME OVER");
+
+        Time.timeScale = 0f;
+
+        UIController ui = FindObjectOfType<UIController>();
+        if (ui != null)
+            ui.ShowGameOver();
     }
 
-    // THIS is the method your button will call
     public void RestartGame()
     {
+        Debug.Log("RESTART GAME");
+
         Time.timeScale = 1f;
-        isGameOver = false;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

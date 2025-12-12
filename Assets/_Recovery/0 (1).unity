@@ -1912,7 +1912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
   scoreText: {fileID: 2041591501}
-  highScoreText: {fileID: 931079206}
+  highScoreText: {fileID: 0}
   player: {fileID: 237908652}
 --- !u!4 &1493667851
 Transform:

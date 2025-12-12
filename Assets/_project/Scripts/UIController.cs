@@ -4,21 +4,15 @@ public class UIController : MonoBehaviour
 {
     public GameObject gameOverPanel;
 
-    void Start()
+    private void Start()
     {
-        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
     }
 
-    void Update()
+    public void ShowGameOver()
     {
-        if (!GameManager.Instance) return;
-
-        if (GameManager.Instance.isGameOver && !gameOverPanel.activeSelf)
-        {
-            // show panel
+        if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
-            // optional: pause game time
-            Time.timeScale = 0f;
-        }
     }
 }
