@@ -1,17 +1,18 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Difficulty")]
+    public DifficultySettings difficulty;   // Scriptable Object
+
     [Header("Movement")]
-    public float forwardSpeed = 10f;
     public float laneDistance = 3f;
     public float laneChangeSpeed = 10f;
 
     [Header("State")]
-    [HideInInspector]
-    public bool isAlive = true;
+    [HideInInspector] public bool isAlive = true;
 
     [Header("Jumping")]
     public float jumpForce = 7f;
@@ -20,27 +21,42 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private Animator anim;
 
-    private int targetLane = 1;      // 0 = left / 1 = middle / 2 = right
+    private int targetLane = 1;
     private float verticalVelocity = 0f;
+    private float currentForwardSpeed;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+
+        currentForwardSpeed = difficulty.baseForwardSpeed;
     }
 
     void Update()
     {
-        if (!isAlive)
-            return;
+        if (!isAlive) return;
+
+        // =============================
+        // DIFFICULTY → SPEED SCALING
+        // =============================
+        if (ScoreManager.Instance != null)
+        {
+            float difficultyMultiplier =
+                (ScoreManager.Instance.GetScore() / 100f)
+                * difficulty.speedIncreasePer100Score;
+
+            currentForwardSpeed =
+                difficulty.baseForwardSpeed + difficultyMultiplier;
+        }
 
         // --------------------------
-        //  FORWARD MOVEMENT
+        // FORWARD MOVEMENT
         // --------------------------
-        Vector3 move = Vector3.forward * forwardSpeed;
+        Vector3 move = Vector3.forward * currentForwardSpeed;
 
         // --------------------------
-        //  LANE SWITCHING
+        // LANE SWITCHING
         // --------------------------
         if (Input.GetKeyDown(KeyCode.RightArrow) && targetLane < 2)
             targetLane++;
@@ -53,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
         move.x = deltaX * laneChangeSpeed;
 
         // --------------------------
-        //  JUMPING
+        // JUMPING
         // --------------------------
         if (controller.isGrounded)
         {
@@ -76,36 +92,41 @@ public class PlayerMovement : MonoBehaviour
         move.y = verticalVelocity;
 
         // --------------------------
-        //  APPLY MOVEMENT
+        // APPLY MOVEMENT
         // --------------------------
         controller.Move(move * Time.deltaTime);
     }
 
-    // ================================================================
-    //  STOP IMMEDIATELY WHEN COLLIDING WITH AN OBSTACLE
-    // ================================================================
+    // =============================
+    // STOP ON DEATH
+    // =============================
     public void StopImmediate()
     {
         isAlive = false;
-
-        // completely freeze motion
-        forwardSpeed = 0f;
+        currentForwardSpeed = 0f;
         verticalVelocity = 0f;
 
-        // ensure no movement applied
         controller.Move(Vector3.zero);
-
-        // stop running animation
         anim.SetBool("IsRunning", false);
 
-        // safely trigger Die animation if it exists
-        foreach (var p in anim.parameters)
-        {
-            if (p.name == "Die")
-            {
-                anim.SetTrigger("Die");
-                break;
-            }
-        }
+        if (anim.HasParameterOfType("Die", AnimatorControllerParameterType.Trigger))
+            anim.SetTrigger("Die");
+    }
+}
+
+// =============================
+// SAFE ANIM PARAM CHECK
+// =============================
+public static class AnimatorExtensions
+{
+    public static bool HasParameterOfType(
+        this Animator animator,
+        string name,
+        AnimatorControllerParameterType type)
+    {
+        foreach (var p in animator.parameters)
+            if (p.type == type && p.name == name)
+                return true;
+        return false;
     }
 }

@@ -1,65 +1,62 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public TextMeshProUGUI scoreText;      // Shows SCORE
-    public TextMeshProUGUI highScoreText;  // Shows HIGH SCORE
+    [Header("UI")]
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI highScoreText;
+
+    [Header("References")]
     public Transform player;
 
-    private float score = 0f;
-    private bool isRunning = true;
-
+    private int score = 0;
     private int highScore = 0;
+    private bool isRunning = true;
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
 
-        // Load saved high score
-        highScore = PlayerPrefs.GetInt("HighScore", 0);
-    }
-
-    void Start()
-    {
-        UpdateUI();
+        highScore = PlayerPrefs.GetInt("HIGH_SCORE", 0);
     }
 
     void Update()
     {
-        if (!isRunning) return;
+        if (!isRunning || player == null) return;
 
-        // Score is based on Z distance
-        score = player.position.z;
+        // Distance-based score (only increases)
+        int distanceScore = Mathf.FloorToInt(player.position.z);
+        score = Mathf.Max(score, distanceScore);
 
         UpdateUI();
     }
 
-    void UpdateUI()
+    // ⭐ Called by coins / collectibles
+    public void AddScore(int amount)
     {
-        if (scoreText != null)
-            scoreText.text = "SCORE: " + Mathf.FloorToInt(score);
+        if (!isRunning) return;
 
-        if (highScoreText != null)
-            highScoreText.text = "HIGH SCORE: " + highScore;
+        score += amount;
+        UpdateUI();
     }
 
     public void StopScore()
     {
         isRunning = false;
 
-        int finalScore = Mathf.FloorToInt(score);
-
-        // Save new high score if it's bigger
-        if (finalScore > highScore)
+        // Save high score
+        if (score > highScore)
         {
-            highScore = finalScore;
-            PlayerPrefs.SetInt("HighScore", highScore);
+            highScore = score;
+            PlayerPrefs.SetInt("HIGH_SCORE", highScore);
+            PlayerPrefs.Save();
         }
-
-        UpdateUI();
     }
 
     public void ResetScore()
@@ -71,6 +68,15 @@ public class ScoreManager : MonoBehaviour
 
     public int GetScore()
     {
-        return Mathf.FloorToInt(score);
+        return score;
+    }
+
+    void UpdateUI()
+    {
+        if (scoreText != null)
+            scoreText.text = "SCORE: " + score;
+
+        if (highScoreText != null)
+            highScoreText.text = "HIGHEST SCORE: " + highScore;
     }
 }

@@ -1,8 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
     public GameObject gameOverPanel;
+    public TextMeshProUGUI finalTimeText;
 
     private void Start()
     {
@@ -10,9 +12,15 @@ public class UIController : MonoBehaviour
             gameOverPanel.SetActive(false);
     }
 
-    public void ShowGameOver()
+    public void ShowGameOver(float timeSurvived)
     {
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
+
+        if (finalTimeText != null)
+        {
+            int seconds = Mathf.FloorToInt(timeSurvived);
+            finalTimeText.text = "TIME: " + seconds + "s";
+        }
     }
 }

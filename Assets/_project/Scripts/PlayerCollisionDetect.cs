@@ -17,7 +17,10 @@ public class PlayerCollisionDetect : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         anim = GetComponent<Animator>();
-        if (obstacleLayer.value == 0) obstacleLayer = ~0; // fallback layer mask
+
+        // fallback: detect everything if no layer selected
+        if (obstacleLayer.value == 0)
+            obstacleLayer = ~0;
     }
 
     void Update()
@@ -28,9 +31,14 @@ public class PlayerCollisionDetect : MonoBehaviour
         Vector3 localOffset = new Vector3(0f, heightOffset, forwardOffset);
         Vector3 worldPos = transform.TransformPoint(localOffset);
 
-        Collider[] hits = Physics.OverlapSphere(worldPos, checkRadius, obstacleLayer, QueryTriggerInteraction.Ignore);
+        Collider[] hits = Physics.OverlapSphere(
+            worldPos,
+            checkRadius,
+            obstacleLayer,
+            QueryTriggerInteraction.Ignore
+        );
 
-        if (hits != null && hits.Length > 0)
+        if (hits.Length > 0)
         {
             foreach (var c in hits)
             {
@@ -50,19 +58,23 @@ public class PlayerCollisionDetect : MonoBehaviour
 
         Debug.Log("Player hit obstacle! -> " + obstacle.name);
 
-        // Stop player movement
+        // 1️⃣ Stop player movement
         if (movement != null)
             movement.StopImmediate();
 
-        // Stop score here ⭐
+        // 2️⃣ Stop score counting
         if (ScoreManager.Instance != null)
             ScoreManager.Instance.StopScore();
 
-        // Play animation if parameter exists
+        // 3️⃣ STOP TIMER (TIME SURVIVED REQUIREMENT ✅)
+        if (TimeManager.Instance != null)
+            TimeManager.Instance.StopTimer();
+
+        // 4️⃣ Play death animation if it exists
         if (anim != null && HasParam(anim, "Die"))
             anim.SetTrigger("Die");
 
-        // Notify GameManager
+        // 5️⃣ Notify Game Manager (Game Over UI)
         if (GameManager.Instance != null)
             GameManager.Instance.GameOver();
     }
