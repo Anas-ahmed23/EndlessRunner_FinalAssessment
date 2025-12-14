@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   value: 10
+  pickupFX: {fileID: 34908918163881925, guid: ebfcf4a40ad74b442b2783c9ecf571ad, type: 3}
+  pickupSound: {fileID: 8300000, guid: 1d1e7dc49774f3249ba1dd5febba0308, type: 3}
 --- !u!114 &3370994604665701834
 MonoBehaviour:
   m_ObjectHideFlags: 0
