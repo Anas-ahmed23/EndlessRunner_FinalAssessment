@@ -1,0 +1,37 @@
+# Endless Runner – Final Assessment
+
+## Overview
+A 3D Endless Runner game developed in Unity.  
+The player runs forward automatically, avoids obstacles, collects coins, and survives as long as possible while difficulty increases dynamically over time.
+
+## Controls
+- Left / Right Arrows: Change lanes
+- Space / Up Arrow: Jump
+- ESC: Pause / Resume
+- Mouse: UI interaction
+
+## Features
+- Auto-runner player movement with lane switching
+- Random obstacle spawning using prefabs
+- Coin collectibles with score system
+- Increasing difficulty using Scriptable Objects
+- High score persistence
+- Pause menu with volume control
+- Game over screen with score and time survived
+- Particle effects and sound effects
+- Background music
+
+## Technologies
+- Unity 6
+- C#
+- TextMeshPro
+- Scriptable Objects
+- Unity UI System
+
+## How to Play
+1. Press Start from the main menu
+2. Avoid obstacles and collect coins
+3. Try to beat your highest score
+
+## Build
+Run the provided executable file to play the game.
